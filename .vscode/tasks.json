@@ -13,7 +13,8 @@
                 "`pkg-config",
                 "--libs",
                 "--cflags",
-                "opencv4`"
+                "opencv4`",
+                "-pthread"
             ],
             "options": {
                 "cwd": "${fileDirname}"
