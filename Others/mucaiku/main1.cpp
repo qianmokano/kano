@@ -63,8 +63,8 @@ void Query(const vector<Board> boards, bool show_header)
         for (int i = 0; i < boards.size(); i++)
         {
             cout << i+1 << "号 "<< boards[i].kind << "的长是:" << boards[i].len << " 宽是:" << boards[i].wid << endl;
-            Wait(3);
         }
+        Wait(2);
     }
     else 
     {
@@ -176,7 +176,33 @@ void Set(vector<Board>& boards)
     Wait(2);
 }
 
-
+// 删除木材
+void Del(vector<Board>& boards)
+{
+    cout << "-----------删除木材-----------" << endl;
+    if (boards.size() != 0)
+    {
+        Query(boards, false);
+        cout << "请输入想删除木材的编号：" << endl;
+        int n;
+        while (!(cin >> n) || n > boards.size())
+        {
+        cout << "输入无效，请重新输入数字：" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        vector<Board>::iterator it = boards.begin() + n;
+        boards.erase(it);
+        cout << "删除成功！" << endl;
+        Wait(1);
+    }
+    else 
+    {
+        cout << "当前不存在木材，请先添加木材！" << endl;
+    }
+    cout << "即将返回主菜单..." << endl;
+    Wait(2);
+}
 
 int main()
 {
@@ -188,7 +214,8 @@ int main()
         cout << "查询木材信息\t\t[输入1]" << endl;
         cout << "添加木材\t\t[输入2]" << endl;
         cout << "修改木材\t\t[输入3]" << endl;
-        cout << "退出\t\t\t[输入4]" << endl;
+        cout << "删除木材\t\t[输入4]" << endl;
+        cout << "退出\t\t\t[输入5]" << endl;
         
         int keyboard_input;
         cin >> keyboard_input;
@@ -208,6 +235,11 @@ int main()
             continue;
         }
         else if (keyboard_input == 4)
+        {
+            Del(boards);
+            continue;
+        }
+        else if (keyboard_input == 5)
         {
             cout << "退出程序" << endl;
             break;
