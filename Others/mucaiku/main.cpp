@@ -64,7 +64,10 @@ void Query(const vector<Board> boards, bool show_header)
         {
             cout << i+1 << "号 "<< boards[i].kind << "的长是:" << boards[i].len << " 宽是:" << boards[i].wid << endl;
         }
-        Wait(2);
+        if (show_header)
+        {
+            Wait(2);
+        }
     }
     else 
     {
