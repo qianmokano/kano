@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <chrono>
 #include <string>
+#include <thread>
 
 using namespace std;
 
@@ -30,6 +31,26 @@ class Board
         }
 };
 
+// 创建等待函数
+void Wait(int time)
+{
+    chrono::seconds duration(time);
+    this_thread::sleep_for(duration);
+}
+
+// 创建输入(验证)函数
+double Input_Double()
+{
+    double value;
+    while (!(cin >> value)) {
+        cout << "输入无效，请重新输入数字：" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return value;
+}
+
+
 // 查询木材信息
 void Query(const vector<Board> boards, bool show_header) 
 {
@@ -37,10 +58,22 @@ void Query(const vector<Board> boards, bool show_header)
     {
         cout << "-----------查询木材信息-----------" << endl;
     }
-    for (int i = 0; i < boards.size(); i++)
+    if (boards.size() != 0)
     {
-        cout << i+1 << "号 "<< boards[i].kind << "的长是:\t" << boards[i].len << endl;
-        cout << i+1 << "号 "<< boards[i].kind << "的宽是:\t" << boards[i].wid << endl;
+        for (int i = 0; i < boards.size(); i++)
+        {
+            cout << i+1 << "号 "<< boards[i].kind << "的长是:" << boards[i].len << " 宽是:" << boards[i].wid << endl;
+            Wait(3);
+        }
+    }
+    else 
+    {
+        cout << "当前不存在木材，请先添加木材！" << endl;
+    }
+    if (show_header)
+    {
+        cout << "即将返回主菜单..." << endl;
+        Wait(1);
     }
 }
 
@@ -56,23 +89,16 @@ void Add(vector<Board>& boards)
     int n = boards.size() - 1;
 
     cout << "请输入添加木材的长：" << endl;
-    double len;
-    while (!(cin >> len)) {
-        cout << "输入无效，请重新输入数字：" << endl;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
+    double len = Input_Double();
     boards[n].set_len(len);
 
     cout << "请输入添加木材的宽：" << endl;
-    double wid;
-    while (!(cin >> wid)) {
-        cout << "输入无效，请重新输入数字：" << endl;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
+    double wid = Input_Double();
     boards[n].set_wid(wid);
     cout << "添加成功！" << endl;
+    Wait(0.5);
+    cout << "即将返回主菜单..." << endl;
+    Wait(1);
 }
 
 // 修改木材
@@ -80,46 +106,77 @@ void Set(vector<Board>& boards)
 {
     begin:
     cout << "-----------修改木材-----------" << endl;
-    Query(boards, false);
-    cout << "请输入想修改木材的编号：" << endl;
-    int n;
-    cin >> n;
-    cout << "您要修改的木材是：" << boards[n-1].kind << endl;
-    cout << "修改木材类型\t\t[输入1]" << endl;
-    cout << "修改木材长\t\t[输入2]" << endl;
-    cout << "修改木材宽\t\t[输入3]" << endl;
-    cout << "返回上一步\t\t[输入4]" << endl;
-    int keyboard_input;
-    cin >> keyboard_input;
-    if (keyboard_input == 1)
+    if (boards.size() != 0)
     {
-        cout << "请输入木材类型：" << endl;
-        string kind;
-        cin >> kind;
-        boards[n-1].set_kind(kind);
-        cout << "修改成功！" << endl;
+        Query(boards, false);
+        cout << "请输入想修改木材的编号：" << endl;
+        int n;
+        while (!(cin >> n) || n > boards.size())
+        {
+        cout << "输入无效，请重新输入数字：" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        while (true)
+        {
+            cout << "-----------修改木材-----------" << endl;
+            cout << "您要修改的木材是：" << boards[n-1].kind << endl;
+            cout << "修改木材类型\t\t[输入1]" << endl;
+            cout << "修改木材长\t\t[输入2]" << endl;
+            cout << "修改木材宽\t\t[输入3]" << endl;
+            cout << "结束修改\t\t[输入4]" << endl;
+            cout << "返回上一步\t\t[输入5]" << endl;
+            int keyboard_input;
+            cin >> keyboard_input;
+            if (keyboard_input == 1)
+            {
+                cout << "请输入木材类型：" << endl;
+                string kind;
+                cin >> kind;
+                boards[n-1].set_kind(kind);
+                cout << "修改成功！" << endl;
+                Wait(1);
+            }
+            else if (keyboard_input == 2)
+            {
+                cout << "请输入木材长：" << endl;
+                double len = Input_Double();
+                boards[n-1].set_len(len);
+                cout << "修改成功！" << endl;
+                Wait(1);
+            }
+            else if (keyboard_input == 3)
+            {
+                cout << "请输入木材宽：" << endl;
+                double wid = Input_Double();
+                boards[n-1].set_wid(wid);
+                cout << "修改成功！" << endl;
+                Wait(1);
+            }
+            else if (keyboard_input == 4)
+            {
+                break;
+            }
+            else if (keyboard_input == 5)
+            {
+                goto begin;
+            }
+            else
+            {
+                cout << "输入错误，请重新输入!" << endl;
+                Wait(1);
+            }
+        }
     }
-    else if (keyboard_input == 2)
+    else 
     {
-        cout << "请输入木材长：" << endl;
-        double len;
-        cin >> len;
-        boards[n-1].set_len(len);
-        cout << "修改成功！" << endl;
+        cout << "当前不存在木材，请先添加木材！" << endl;
     }
-    else if (keyboard_input == 3)
-    {
-        cout << "请输入木材宽：" << endl;
-        double wid;
-        cin >> wid;
-        boards[n-1].set_wid(wid);
-        cout << "修改成功！" << endl;
-    }
-    else if (keyboard_input == 4)
-    {
-        goto begin;
-    }
+    cout << "即将返回主菜单..." << endl;
+    Wait(2);
 }
+
+
 
 int main()
 {
@@ -155,5 +212,11 @@ int main()
             cout << "退出程序" << endl;
             break;
         }
+        else
+        {
+            cout << "输入错误，请重新输入!" << endl;
+            Wait(1);
+        }
     }
+    return 0;
 }
