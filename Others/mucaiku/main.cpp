@@ -194,7 +194,7 @@ void Del(vector<Board>& boards)
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
-        vector<Board>::iterator it = boards.begin() + n;
+        vector<Board>::iterator it = boards.begin() + n - 1;
         boards.erase(it);
         cout << "删除成功！" << endl;
         Wait(1);
