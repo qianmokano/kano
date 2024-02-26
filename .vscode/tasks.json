@@ -10,10 +10,6 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "`pkg-config",
-                "--libs",
-                "--cflags",
-                "opencv4`",
                 "-pthread"
             ],
             "options": {
