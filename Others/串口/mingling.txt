@@ -1,0 +1,3 @@
+sudo chmod 777 /dev/tty*
+cutecom
+ros2 run serialport serialport_node
