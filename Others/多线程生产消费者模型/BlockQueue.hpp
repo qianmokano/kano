@@ -28,7 +28,7 @@ public:
         pthread_cond_destroy(&conCond_);
         pthread_cond_destroy(&proCond_);
     }
- 
+
 public:
     // 生产函数
     void push(const T &in) // const &: 纯输入
